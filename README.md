@@ -34,14 +34,23 @@
       # Install as package
       python setup.py install
       ```
+  4. [Optional] Modify the repository if you trained the model on ultralytics>=8.2.47
+
+     ```
+     # Apply patch
+     git apply dfloss.patch
+     ```
 
 ## Convert model to .rknn
+
   1. Convert pt to onnx.
       ```
       from ultralyrics import YOLO
       model = YOLO("yolov8.pt")
-      path = model.export(format="rknn")
+      path = model.export(format="rknn")  # Internal method written by airockchip, don't be fooled by the format name
       ```
+
+  1.5 Check the input size when exporting the model. If necessary, change batch_size parameter in ultralytics/cfg/default.yaml to any value.
 
   2. Convert onnx to rknn.
       ```
@@ -54,6 +63,8 @@
       # Run converter
       python convert.py <path-to-onnx-model>/yolov8n.onnx rk3588 i8 ../model/yolov8n.rknn
       ```
+
+  2.5 If the model has issues or warnings in convertation process, you can change opset version from 12 to 17 or 19, depending on PyTorch version. Currently, RKNN==2.1.0 recommends opset 19.
 
   3. Save and send it to Orange Pi.
 
@@ -68,7 +79,7 @@
 
   3. Plug SD card to Orange Pi.
 
-## Configure OrangePi for runnig models
+## Configure OrangePi for running models
 
   1. Update [**librknnrt.so**](https://github.com/airockchip/rknn-toolkit2/blob/master/rknpu2/runtime/Linux/librknn_api/aarch64/).
 
@@ -90,7 +101,7 @@
       pip install rknn_toolkit_lite2-2.1.0-cp310-cp310-linux_aarch64.whl
       ```
 
-  3. Install opencv-python and other requirements(if necessery).
+  3. Install opencv-python and other requirements (if necessary).
 
       ```
       pip install opencv-python
