@@ -34,11 +34,17 @@
       # Install as package
       python setup.py install
       ```
-  4. [Optional] Modify the repository if you trained the model on ultralytics>=8.2.47
+  4. [Optional] Modify the repository if you trained the YOLO model on ultralytics>=8.2.47
 
      ```
+     # Clone this repository
+     cd ..
+     git clone https://github.com/Applied-Deep-Learning-Lab/rk3588-yolov8 --depth 1
+     # Get patch from this repository to airockchip/ultralytics_yolov8
+     mv ./rk3588-yolov8/dfloss.diff ./ultralytics_yolov8/
+     cd ultralytics_yolov8/
      # Apply patch
-     git apply dfloss.patch
+     git apply dfloss.diff
      ```
 
 ## Convert model to .rknn
