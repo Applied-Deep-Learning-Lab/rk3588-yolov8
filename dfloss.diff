@@ -1,0 +1,90 @@
+diff --git a/ultralytics/cfg/default.yaml b/ultralytics/cfg/default.yaml
+index d435dbd..3ce2b87 100644
+--- a/ultralytics/cfg/default.yaml
++++ b/ultralytics/cfg/default.yaml
+@@ -9,7 +9,7 @@ model: yolov8m-seg.pt # (str, optional) path to model file, i.e. yolov8n.pt, yol
+ data:  # (str, optional) path to data file, i.e. coco128.yaml
+ epochs: 100  # (int) number of epochs to train for
+ patience: 50  # (int) epochs to wait for no observable improvement for early stopping of training
+-batch: 16  # (int) number of images per batch (-1 for AutoBatch)
++batch: 1  # (int) number of images per batch (-1 for AutoBatch)
+ imgsz: 640  # (int | list) input images size as int for train and val modes, or list[w,h] for predict and export modes
+ save: True  # (bool) save train checkpoints and predict results
+ save_period: -1 # (int) Save checkpoint every x epochs (disabled if < 1)
+diff --git a/ultralytics/utils/loss.py b/ultralytics/utils/loss.py
+index 1da0586..481dd2a 100644
+--- a/ultralytics/utils/loss.py
++++ b/ultralytics/utils/loss.py
+@@ -52,13 +52,39 @@ class FocalLoss(nn.Module):
+         return loss.mean(1).sum()
+ 
+ 
++class DFLoss(nn.Module):
++    """Criterion class for computing DFL losses during training."""
++
++    def __init__(self, reg_max=16) -> None:
++        """Initialize the DFL module."""
++        super().__init__()
++        self.reg_max = reg_max
++
++    def __call__(self, pred_dist, target):
++        """
++        Return sum of left and right DFL losses.
++
++        Distribution Focal Loss (DFL) proposed in Generalized Focal Loss
++        https://ieeexplore.ieee.org/document/9792391
++        """
++        target = target.clamp_(0, self.reg_max - 1 - 0.01)
++        tl = target.long()  # target left
++        tr = tl + 1  # target right
++        wl = tr - target  # weight left
++        wr = 1 - wl  # weight right
++        return (
++            F.cross_entropy(pred_dist, tl.view(-1), reduction="none").view(tl.shape) * wl
++            + F.cross_entropy(pred_dist, tr.view(-1), reduction="none").view(tl.shape) * wr
++        ).mean(-1, keepdim=True)
++
++
+ class BboxLoss(nn.Module):
++    """Criterion class for computing training losses during training."""
+ 
+-    def __init__(self, reg_max, use_dfl=False):
++    def __init__(self, reg_max=16):
+         """Initialize the BboxLoss module with regularization maximum and DFL settings."""
+         super().__init__()
+-        self.reg_max = reg_max
+-        self.use_dfl = use_dfl
++        self.dfl_loss = DFLoss(reg_max) if reg_max > 1 else None
+ 
+     def forward(self, pred_dist, pred_bboxes, anchor_points, target_bboxes, target_scores, target_scores_sum, fg_mask):
+         """IoU loss."""
+@@ -67,26 +93,15 @@ class BboxLoss(nn.Module):
+         loss_iou = ((1.0 - iou) * weight).sum() / target_scores_sum
+ 
+         # DFL loss
+-        if self.use_dfl:
+-            target_ltrb = bbox2dist(anchor_points, target_bboxes, self.reg_max)
+-            loss_dfl = self._df_loss(pred_dist[fg_mask].view(-1, self.reg_max + 1), target_ltrb[fg_mask]) * weight
++        if self.dfl_loss:
++            target_ltrb = bbox2dist(anchor_points, target_bboxes, self.dfl_loss.reg_max - 1)
++            loss_dfl = self.dfl_loss(pred_dist[fg_mask].view(-1, self.dfl_loss.reg_max), target_ltrb[fg_mask]) * weight
+             loss_dfl = loss_dfl.sum() / target_scores_sum
+         else:
+             loss_dfl = torch.tensor(0.0).to(pred_dist.device)
+ 
+         return loss_iou, loss_dfl
+ 
+-    @staticmethod
+-    def _df_loss(pred_dist, target):
+-        """Return sum of left and right DFL losses."""
+-        # Distribution Focal Loss (DFL) proposed in Generalized Focal Loss https://ieeexplore.ieee.org/document/9792391
+-        tl = target.long()  # target left
+-        tr = tl + 1  # target right
+-        wl = tr - target  # weight left
+-        wr = 1 - wl  # weight right
+-        return (F.cross_entropy(pred_dist, tl.view(-1), reduction='none').view(tl.shape) * wl +
+-                F.cross_entropy(pred_dist, tr.view(-1), reduction='none').view(tl.shape) * wr).mean(-1, keepdim=True)
+-
+ 
+ class KeypointLoss(nn.Module):
+ 
