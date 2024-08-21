@@ -6,20 +6,20 @@
 
       ```
       # Download
-      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit2/packages/requirements_cp310-2.0.0b0.txt
+      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit2/packages/requirements_cp310-2.1.0.txt
 
       # Install
-      pip install -r requirements_cp310-2.0.0b0.txt
+      pip install -r requirements_cp310-2.1.0.txt
       ```
 
   2. Install whls for [**rknn-toolkit2**](https://github.com/airockchip/rknn-toolkit2/tree/master/rknn-toolkit2/packages).
 
       ```
       # Download
-      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit2/packages/rknn_toolkit2-2.0.0b0+9bab5682-cp310-cp310-linux_x86_64.whl
+      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit2/packages/rknn_toolkit2-2.1.0+708089d1-cp310-cp310-linux_x86_64.whl
 
       # Install
-      pip install rknn_toolkit2-2.0.0b0+9bab5682-cp310-cp310-linux_x86_64.whl
+      pip install rknn_toolkit2-2.1.0+708089d1-cp310-cp310-linux_x86_64.whl
       ```
 
   3. Install [**ultralytics_yolov8**](https://github.com/airockchip/ultralytics_yolov8) special for converting pt -> onnx (optimized for rknn).
@@ -84,10 +84,10 @@
 
       ```
       # Download
-      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit-lite2/packages/rknn_toolkit_lite2-2.0.0b0-cp310-cp310-linux_aarch64.whl
+      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit-lite2/packages/rknn_toolkit_lite2-2.1.0-cp310-cp310-linux_aarch64.whl
 
       # Install
-      pip install rknn_toolkit_lite2-2.0.0b0-cp310-cp310-linux_aarch64.whl
+      pip install rknn_toolkit_lite2-2.1.0-cp310-cp310-linux_aarch64.whl
       ```
 
   3. Install opencv-python and other requirements(if necessery).
