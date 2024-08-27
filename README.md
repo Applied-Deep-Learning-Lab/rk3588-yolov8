@@ -51,7 +51,7 @@
 
   1. Convert pt to onnx.
       ```
-      from ultralyrics import YOLO
+      from ultralytics import YOLO
       model = YOLO("yolov8.pt")
       path = model.export(format="rknn")  # Internal method written by airockchip, don't be fooled by the format name
       ```
