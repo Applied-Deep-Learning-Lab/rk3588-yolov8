@@ -2,21 +2,21 @@
 
 ## Configure PC for converting models to .rknn
 
-  1. Install [**requirements**](https://github.com/airockchip/rknn-toolkit2/tree/master/rknn-toolkit2/packages).
+  1. Install [**requirements**](https://github.com/airockchip/rknn-toolkit2/tree/v2.1.0/rknn-toolkit2/packages).
 
       ```
       # Download
-      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit2/packages/requirements_cp310-2.1.0.txt
+      wget https://github.com/airockchip/rknn-toolkit2/raw/v2.1.0/rknn-toolkit2/packages/requirements_cp310-2.1.0.txt
 
       # Install
       pip install -r requirements_cp310-2.1.0.txt
       ```
 
-  2. Install whls for [**rknn-toolkit2**](https://github.com/airockchip/rknn-toolkit2/tree/master/rknn-toolkit2/packages).
+  2. Install whls for [**rknn-toolkit2**](https://github.com/airockchip/rknn-toolkit2/tree/v2.1.0/rknn-toolkit2/packages).
 
       ```
       # Download
-      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit2/packages/rknn_toolkit2-2.1.0+708089d1-cp310-cp310-linux_x86_64.whl
+      wget https://github.com/airockchip/rknn-toolkit2/raw/v2.1.0/rknn-toolkit2/packages/rknn_toolkit2-2.1.0+708089d1-cp310-cp310-linux_x86_64.whl
 
       # Install
       pip install rknn_toolkit2-2.1.0+708089d1-cp310-cp310-linux_x86_64.whl
@@ -34,18 +34,6 @@
       # Install as package
       python setup.py install
       ```
-  4. [Optional] Modify the repository if you trained the YOLO model on ultralytics>=8.2.47
-
-     ```
-     # Clone this repository
-     cd ..
-     git clone https://github.com/Applied-Deep-Learning-Lab/rk3588-yolov8 --depth 1
-     # Get patch from this repository to airockchip/ultralytics_yolov8
-     mv ./rk3588-yolov8/dfloss.diff ./ultralytics_yolov8/
-     cd ultralytics_yolov8/
-     # Apply patch
-     git apply dfloss.diff
-     ```
 
 ## Convert model to .rknn
 
@@ -76,10 +64,10 @@
 
 ## Install OS
 
-  1. Dowload image:
+  1. Download image:
 
-      | [OrangePi 5](https://drive.google.com/drive/folders/1i5zQOg1GIA4_VNGikFl2nPM0Y2MBw2M0) | [OrangePi 5B](https://drive.google.com/drive/folders/1xhP1KeW_hL5Ka4nDuwBa8N40U8BN0AC9) |
-      | :---: | :---: |
+      | [Ubuntu (OrangePi 5)](https://drive.google.com/drive/folders/1i5zQOg1GIA4_VNGikFl2nPM0Y2MBw2M0) | [Ubuntu (OrangePi 5B)](https://drive.google.com/drive/folders/1xhP1KeW_hL5Ka4nDuwBa8N40U8BN0AC9) | [Armbian (OrangePi 5/5B)](https://www.armbian.com/orangepi-5/) |
+      | :---: | :---: | :---: |
 
   2. Burn it to SD card.
 
@@ -87,21 +75,21 @@
 
 ## Configure OrangePi for running models
 
-  1. Update [**librknnrt.so**](https://github.com/airockchip/rknn-toolkit2/blob/master/rknpu2/runtime/Linux/librknn_api/aarch64/).
+  1. Update [**librknnrt.so**](https://github.com/airockchip/rknn-toolkit2/blob/v2.1.0/rknpu2/runtime/Linux/librknn_api/aarch64/).
 
       ```
       # Download
-      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknpu2/runtime/Linux/librknn_api/aarch64/librknnrt.so
+      wget https://github.com/airockchip/rknn-toolkit2/raw/v2.1.0/rknpu2/runtime/Linux/librknn_api/aarch64/librknnrt.so
 
       # Move to /usr/lib
       sudo mv ./librknnrt.so /usr/lib
       ```
 
-  2. Install whls for [**rknn-toolkit-lite2**](https://github.com/airockchip/rknn-toolkit2/tree/master/rknn-toolkit-lite2/packages).
+  2. Install whls for [**rknn-toolkit-lite2**](https://github.com/airockchip/rknn-toolkit2/tree/v2.1.0/rknn-toolkit-lite2/packages).
 
       ```
       # Download
-      wget https://github.com/airockchip/rknn-toolkit2/raw/master/rknn-toolkit-lite2/packages/rknn_toolkit_lite2-2.1.0-cp310-cp310-linux_aarch64.whl
+      wget https://github.com/airockchip/rknn-toolkit2/raw/v2.1.0/rknn-toolkit-lite2/packages/rknn_toolkit_lite2-2.1.0-cp310-cp310-linux_aarch64.whl
 
       # Install
       pip install rknn_toolkit_lite2-2.1.0-cp310-cp310-linux_aarch64.whl
